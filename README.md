@@ -1,11 +1,21 @@
 # rpi-ncsdk-docker
 _In this tutorial we're going to build Intel [Intel® Movidius™ Neural Compute SDK](https://github.com/movidius/ncsdk) docker image for Raspberry Pi on x86 machine._
 
-1. First, install cross-compiling tool for building arm image on x86 machine (if `qemu-arm-static` does not work, `sudo apt-get install qemu-user-static && cp /usr/bin/qemu-arm-static .`)
+1. First, install cross-compiling tool for building arm image on x86 machine. `./qemu-arm-static` is provided for Ubuntu 18.04, but if this does not work, run 
+
+```sh
+git clone git@github.com:duckietown/rpi-ncsdk-docker.git && \
+    cd rpi-ncsdk-docker &&
+    sudo apt-get install qemu-user-static && \
+    cp /usr/bin/qemu-arm-static .
+```
+
 2. To build new docker image, run this command bellow on your favorite terminal
-  ```sh
-  docker build --rm -f "Dockerfile" -t duckietown/rpi-ncsdk-docker .
-  ```
+
+```sh
+docker build --rm -f "Dockerfile" -t duckietown/rpi-ncsdk-docker .
+```
+
 3. Run newly-built docker image via 
 
 ```sh
