@@ -5,7 +5,7 @@ _In this tutorial we're going to build Intel [Intel® Movidius™ Neural Compute
 
 ```sh
 git clone git@github.com:duckietown/rpi-ncsdk-docker.git && \
-    cd rpi-ncsdk-docker &&
+    cd rpi-ncsdk-docker && \
     sudo apt-get install qemu-user-static && \
     cp /usr/bin/qemu-arm-static .
 ```
@@ -21,8 +21,8 @@ docker build --rm -f "Dockerfile" -t duckietown/rpi-ncsdk-docker .
 ```sh
 docker run --net=host \
            --privileged \
-           -v /dev/bus/usb/:/dev/bus/usb/:ro 
-           -v /usr/bin/qemu-arm-static:/usr/bin/qemu-arm-static:ro,rslave 
-           --name ncsdk -i -t 
+           -v /dev/bus/usb/:/dev/bus/usb/:ro \
+           -v /usr/bin/qemu-arm-static:/usr/bin/qemu-arm-static:ro,rslave \
+           --name ncsdk -i -t  \
            duckietown/rpi-ncsdk-docker /bin/bash
 ```
