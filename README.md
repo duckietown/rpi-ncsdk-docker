@@ -4,7 +4,7 @@ _In this tutorial we're going to build Intel [Intel® Movidius™ Neural Compute
 1. First, install cross-compiling tool for building arm image on x86 machine. `./qemu-arm-static` is provided for Ubuntu 18.04, but if this does not work, run 
 
 ```sh
-git clone git@github.com:duckietown/rpi-ncsdk-docker.git && \
+git clone --recursive git@github.com:duckietown/rpi-ncsdk-docker.git && \
     cd rpi-ncsdk-docker && \
     sudo apt-get install qemu-user-static && \
     cp /usr/bin/qemu-arm-static .
