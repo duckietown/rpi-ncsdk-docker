@@ -1,0 +1,3 @@
+[submodule "ncsdk"]
+	path = ncsdk
+	url = git@github.com:duckietown/ncsdk.git
