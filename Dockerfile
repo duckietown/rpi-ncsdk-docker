@@ -1,5 +1,6 @@
 # Stage 1: build base image with prequisite packages
-FROM arm32v7/ubuntu:xenial as ncsdk_python
+FROM duckietown/rpi-duckiebot-base:master18 as ncsdk_python
+
 LABEL maintainer="tuanlm@greenglobal.vn"
 
 # Enable QEMU for ARM to build ARM image on X86 machine
@@ -120,3 +121,4 @@ ENTRYPOINT make clean \
             && cd /ncsdk/examples/apps/hello_ncs_py/ \
             && make run \
             && /bin/bash
+
