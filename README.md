@@ -26,3 +26,38 @@ docker run --net=host \
            --name ncsdk -i -t  \
            duckietown/rpi-ncsdk-docker /bin/bash
 ```
+
+# How to load and run the graph file
+
+```sh
+from mvnc import mvncapi
+
+# Get a list of valid device identifiers
+device_list = mvncapi.enumerate_devices()
+
+# Create a Device instance for the first device found
+device = mvncapi.Device(device_list[0])
+
+# Open communication with the device
+device.open()
+
+# Create a Graph
+graph = mvncapi.Graph('graph1')
+
+# Read a compiled network graph from file (set the graph_filepath correctly for your graph file)
+graph_filepath = './graph'
+with open(graph_filepath, 'rb') as f:
+    graph_buffer = f.read()
+
+# Allocate the graph on the device
+graph.allocate(device, graph_buffer)
+
+#
+# Use the device...
+#
+
+# Deallocate and destroy the graph handle, close the device, and destroy the device handle
+graph.destroy()
+device.close()
+device.destroy()
+'''
