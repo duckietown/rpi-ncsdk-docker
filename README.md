@@ -29,7 +29,7 @@ docker run --net=host \
 
 # How to load and run the graph file
 
-```sh
+```python
 from mvnc import mvncapi
 
 # Get a list of valid device identifiers
@@ -74,8 +74,11 @@ graph.queue_inference_with_fifo_elem(fifoIn, fifoOut, img, 'user object')
 # ***************************************************************
 output, userobj = fifoOut.read_elem()
 
-# Deallocate and destroy the graph handle, close the device, and destroy the device handle
+# ***************************************************************
+# Clean up the graph and the device
+# ***************************************************************
+fifoIn.destroy()
+fifoOut.destroy()
 graph.destroy()
 device.close()
-device.destroy()
 ```
