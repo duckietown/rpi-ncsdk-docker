@@ -26,3 +26,61 @@ docker run --net=host \
            --name ncsdk -i -t  \
            duckietown/rpi-ncsdk-docker /bin/bash
 ```
+
+# How to load and run the graph file
+
+Example python file:
+
+```python
+from mvnc import mvncapi
+
+# Get a list of valid device identifiers
+device_list = mvncapi.enumerate_devices()
+
+# Create a Device instance for the first device found
+device = mvncapi.Device(device_list[0])
+
+# Open communication with the device
+device.open()
+
+# Create a Graph
+graph = mvncapi.Graph('graph1')
+
+# Read a compiled network graph from file (set the graph_filepath correctly for your graph file)
+graph_filepath = './graph'
+with open(graph_filepath, 'rb') as f:
+    graph_buffer = f.read()
+
+# Allocate the graph on the device
+graph.allocate(device, graph_buffer)
+
+# ***************************************************************
+# Initialize Fifos (first in first out)
+# ***************************************************************
+fifoIn = mvnc.Fifo("fifoIn0", mvnc.FifoType.HOST_WO)
+fifoOut = mvnc.Fifo("fifoOut0", mvnc.FifoType.HOST_RO)
+
+descIn = graph.get_option(mvnc.GraphOption.RO_INPUT_TENSOR_DESCRIPTORS)
+descOut = graph.get_option(mvnc.GraphOption.RO_OUTPUT_TENSOR_DESCRIPTORS)
+
+fifoIn.allocate(device, descIn[0], 2)
+fifoOut.allocate(device, descOut[0], 2)
+
+# ***************************************************************
+# Send the image to the NCS
+# ***************************************************************
+graph.queue_inference_with_fifo_elem(fifoIn, fifoOut, img, 'user object')
+
+# ***************************************************************
+# Get the result from the NCS
+# ***************************************************************
+output, userobj = fifoOut.read_elem()
+
+# ***************************************************************
+# Clean up the graph and the device
+# ***************************************************************
+fifoIn.destroy()
+fifoOut.destroy()
+graph.destroy()
+device.close()
+```
