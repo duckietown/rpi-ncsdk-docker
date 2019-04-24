@@ -25,7 +25,7 @@ docker run --net=host \
            -v /usr/bin/qemu-arm-static:/usr/bin/qemu-arm-static:ro,rslave \
            --name ncsdk -i -t  \
            duckietown/rpi-ncsdk-docker /bin/bash
-
+```
 
 # How to load and run the graph file
 
