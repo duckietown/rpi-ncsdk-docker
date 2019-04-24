@@ -25,7 +25,7 @@ docker run --net=host \
            -v /usr/bin/qemu-arm-static:/usr/bin/qemu-arm-static:ro,rslave \
            --name ncsdk -i -t  \
            duckietown/rpi-ncsdk-docker /bin/bash
-```
+
 
 # How to load and run the graph file
 
@@ -52,12 +52,30 @@ with open(graph_filepath, 'rb') as f:
 # Allocate the graph on the device
 graph.allocate(device, graph_buffer)
 
-#
-# Use the device...
-#
+# ***************************************************************
+# Initialize Fifos (first in first out)
+# ***************************************************************
+fifoIn = mvnc.Fifo("fifoIn0", mvnc.FifoType.HOST_WO)
+fifoOut = mvnc.Fifo("fifoOut0", mvnc.FifoType.HOST_RO)
+
+descIn = graph.get_option(mvnc.GraphOption.RO_INPUT_TENSOR_DESCRIPTORS)
+descOut = graph.get_option(mvnc.GraphOption.RO_OUTPUT_TENSOR_DESCRIPTORS)
+
+fifoIn.allocate(device, descIn[0], 2)
+fifoOut.allocate(device, descOut[0], 2)
+
+# ***************************************************************
+# Send the image to the NCS
+# ***************************************************************
+graph.queue_inference_with_fifo_elem(fifoIn, fifoOut, img, 'user object')
+
+# ***************************************************************
+# Get the result from the NCS
+# ***************************************************************
+output, userobj = fifoOut.read_elem()
 
 # Deallocate and destroy the graph handle, close the device, and destroy the device handle
 graph.destroy()
 device.close()
 device.destroy()
-'''
+```
